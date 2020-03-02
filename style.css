@@ -19,3 +19,26 @@ td {
 	width: 200px;
 	height: 200px;
 }
+
+
+#winner-container{
+	text-align: center;
+	margin-bottom: 70px;
+	font-size: 2em;
+	color: #1437ed;
+	height: 20px;
+}
+
+#play-again-container {
+	height: 75px;
+}
+
+#play-again-btn {   
+	margin-left: 45%;
+    border: 1px solid black;
+    margin-right: 45%;
+    width: 10%;
+    height: 31px;
+    margin-bottom: 40px;
+    padding: 4px;
+}
