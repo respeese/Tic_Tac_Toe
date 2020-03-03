@@ -1,3 +1,6 @@
+let playerX;
+let playerO;
+
 const boardModule = (function() {
 	let boardArray = [
 	['', '', ''],
@@ -77,15 +80,17 @@ const boardModule = (function() {
 				let winner = gameModule.checkGameOver();
 				if(winner){
 					if(winner == 'X'){
-						playerX.wins += 1;
+						playerX.updateWins();
 						playerX.sayWin();
+						document.querySelector('#pX-score').innerHTML = playerX.getWins();
 						tdList.forEach((td) => {
 							td.style="pointer-events:none;";
 						})
 					}
 					else if(winner == 'O'){
-						player0.wins += 1;
-						player0.sayWin();
+						playerO.updateWins();
+						playerO.sayWin();
+						document.querySelector('#pO-score').innerHTML = playerO.getWins();
 						tdList.forEach((td) => {
 							td.style="pointer-events:none;";
 						})
@@ -107,9 +112,36 @@ const boardModule = (function() {
 
 
 const gameModule = (function() {
-	console.log("Game started");
 	let round = 0;
 	let isGameOver = false;
+
+	function addClickPlay(){
+		let playBtn = document.querySelector('#play-btn');
+		playBtn.addEventListener('click', (event)=>{
+			event.preventDefault();
+			let p1NameElement = document.querySelector('#playerX');
+			let p2NameElement = document.querySelector('#playerO')
+			let p1Name = p1NameElement.value;
+			let p2Name = p2NameElement.value;
+
+			p1NameElement.parentNode.removeChild(p1NameElement);
+			p2NameElement.parentNode.removeChild(p2NameElement);
+
+			if(!p1Name){
+				p1Name = 'Player 1';
+			}
+			if(!p2Name){
+				p2Name = 'Player 2';
+			}
+			playerX = playerFactory('X', p1Name);
+			playerO = playerFactory('O', p2Name);
+
+			document.querySelector('#pX-name').innerHTML = p1Name;
+			document.querySelector('#pO-name').innerHTML = p2Name;
+			playBtn.style.display='none';
+			gameModule.renderBoard();
+		})
+	}
 
 	function renderBoard(){
 		let boardTable= document.querySelector("#board-table");
@@ -161,14 +193,13 @@ const gameModule = (function() {
 		}
 	}
 	
-	return {getIsGameOver, getRound, updateRound, renderBoard, checkGameOver,};
+	return {addClickPlay, getIsGameOver, getRound, updateRound, renderBoard, checkGameOver,};
 })();
 
 
 
 const playerFactory = (mark, name) => {
-	let winnerContainer = document.querySelector('#winner-container');
-	let playAgainContainer = document.querySelector('#play-again-container');
+	let displayContainer = document.querySelector('#display-container');
 	let wins = 0;
 
 	function getWins() {
@@ -184,22 +215,23 @@ const playerFactory = (mark, name) => {
 	}
 
 	function sayWin() {
-		winnerContainer.innerHTML = name+" won! Good job!";
-		playAgainContainer.innerHTML = '<button id="play-again-btn">Play Again</button>';
+		displayContainer.innerHTML = name+" won! Good job!";
+		displayContainer.innerHTML += '<br><button id="play-again-btn">Play Again</button>';
 	}
 
 	function sayTie(){
-		winnerContainer.innerHTML = "It's a tie...";
-		playAgainContainer.innerHTML = '<button>Play Again</button>';
+		displayContainer.innerHTML = "It's a tie...";
+		displayContainer.innerHTML = '<button>Play Again</button>';
 	}
 
 	return {mark, name, getWins, updateWins, setWins, sayWin, sayTie};
 }
 
+gameModule.addClickPlay();
 
-let playerX = playerFactory('X', 'Ryan');
-let player0 = playerFactory('O', 'Jeff');
-gameModule.renderBoard();
+
+
+
 
 
 

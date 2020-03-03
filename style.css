@@ -4,14 +4,13 @@ h1 {
     margin-bottom: 50px;
 }
 
-table {
+#board-table {
 	width: 600px;
 	height: 600px;
 	border-collapse: collapse;
 	margin-left:auto; 
 	margin-right:auto;
 }
-
 td {
 	border: 1px solid black;
 	text-align: center;
@@ -21,24 +20,25 @@ td {
 }
 
 
-#winner-container{
+#display-container {
+	height: 75px;
 	text-align: center;
 	margin-bottom: 70px;
 	font-size: 2em;
 	color: #1437ed;
-	height: 20px;
-}
-
-#play-again-container {
-	height: 75px;
 }
 
 #play-again-btn {   
-	margin-left: 45%;
-    border: 1px solid black;
-    margin-right: 45%;
-    width: 10%;
-    height: 31px;
-    margin-bottom: 40px;
-    padding: 4px;
+	border: 1px solid black;
+	width: 10%;
+	height: 31px;
+	padding: 4px;
+	margin: 40px 45%;
 }
+
+#player-table {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 40px;
+}
+

@@ -7,9 +7,14 @@
 <body>
 	<h1>Tic Tac Toe</h1>
 
-	<div id='winner-container'></div>
-	<div id='play-again-container'>
-		<!-- <button id='play-again-btn'></button> -->
+	<div id='display-container'>
+		<form id="play-form">
+			<input type="text" id="playerX" name="players" placeholder="Player 1 Name">
+			<input type="text" id="playerO" name="players" placeholder="Player 2 Name">
+			<br>
+			<input type="submit" id="play-btn" value="Play">
+		</form>
+
 	</div>
 
 	<div id="board-container">
@@ -31,6 +36,17 @@
 			</tr>
 		</table>
 	</div>
+
+	<table id="player-table">
+		<tr>
+			<td id="pX-name" style="width: 300px; height: 100px;">Player 1</td>
+			<td id="pO-name" style="width: 300px; height: 100px;">Player 2</td>
+		</tr>
+		<tr>
+			<td id="pX-score" style="height: 100px;">0</td>
+			<td id="pO-score" style="height: 100px;">0</td>
+		</tr>
+	</table>
 
 	<script type="text/javascript" src="main.js"></script>
 </body>
