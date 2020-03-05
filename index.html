@@ -3,6 +3,7 @@
 <head>
 	<title>Tic Tac Toe</title>
 	<link rel="stylesheet" type="text/css" href="style.css">
+	 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css">
 </head>
 <body>
 	<h1>Tic Tac Toe</h1>
@@ -37,16 +38,15 @@
 		</table>
 	</div>
 
-	<table id="player-table">
-		<tr>
-			<td id="pX-name" style="width: 300px; height: 100px;">Player 1</td>
-			<td id="pO-name" style="width: 300px; height: 100px;">Player 2</td>
-		</tr>
-		<tr>
-			<td id="pX-score" style="height: 100px;">0</td>
-			<td id="pO-score" style="height: 100px;">0</td>
-		</tr>
-	</table>
+	<div id="player-grid-container">
+		<div id="player-table">
+			<div id="pX-name" class="grid-item">Player 1</div>
+			<div id="pO-name" class="grid-item">Player 2</div>
+			<div id="pX-score" class="grid-item">0</div>
+			<div id="pO-score" class="grid-item">0</div>
+		</div>
+	</div>
+	
 
 	<script type="text/javascript" src="main.js"></script>
 </body>

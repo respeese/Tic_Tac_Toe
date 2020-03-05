@@ -36,9 +36,20 @@ td {
 	margin: 40px 45%;
 }
 
+#player-grid-container{
+	text-align: center;
+}
+
 #player-table {
-	margin-left: auto;
-	margin-right: auto;
+	display:inline-grid;
+	grid-template-columns: 300px 300px;
+	grid-template-rows: 40px 40px;
 	margin-top: 40px;
 }
 
+.grid-item {
+	border: 1px solid rgba(0, 0, 0, 0.8);
+	padding: 20px;
+	/*font-size: 30px;*/
+	text-align: center;
+}

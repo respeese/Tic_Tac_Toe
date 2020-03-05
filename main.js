@@ -1,6 +1,7 @@
 let playerX;
 let playerO;
 
+
 const boardModule = (function() {
 	let boardArray = [
 	['', '', ''],
@@ -24,7 +25,6 @@ const boardModule = (function() {
 				boardArray[i][j] = col.innerHTML;
 			}
 		}
-		console.log(boardArray);
 	}
 
 	function checkBoard() {
@@ -64,84 +64,48 @@ const boardModule = (function() {
 		}
 	}
 
-	function addClickBoard() {
-		tdList = document.querySelectorAll('td');
+
+	function newBoard() {
+		let tdList = document.querySelectorAll('td');
+		tdList.forEach((td) => {
+			td.innerHTML = "";
+		})
+
+		updateBoardArray();
+	}
+
+
+	function updateBoard() {
+		let tdList = document.querySelectorAll('td');
 		tdList.forEach((td) => {
 			td.addEventListener('click', (event) => {
-				gameModule.updateRound();
-				console.log(gameModule.getRound());
+				gameLogic.updateRound();
 
 				if(td.innerHTML === '') {
-					td.innerHTML = boardModule.changeMark(gameModule.getRound());
+					td.innerHTML = boardModule.changeMark(gameLogic.getRound());
 					boardModule.updateBoardArray();
 					td.style = "pointer-events:none;";
 				}
 
-				let winner = gameModule.checkGameOver();
-				if(winner){
-					if(winner == 'X'){
-						playerX.updateWins();
-						playerX.sayWin();
-						document.querySelector('#pX-score').innerHTML = playerX.getWins();
-						tdList.forEach((td) => {
-							td.style="pointer-events:none;";
-						})
-					}
-					else if(winner == 'O'){
-						playerO.updateWins();
-						playerO.sayWin();
-						document.querySelector('#pO-score').innerHTML = playerO.getWins();
-						tdList.forEach((td) => {
-							td.style="pointer-events:none;";
-						})
-					}
-					else if(winner == 'tie'){
-						playerX.sayTie();
-						tdList.forEach((td) => {
-							td.style="pointer-events:none;";
-						})
-					}
-				}
+				gameLogic.checkRoundOver();
+				
 			})
 		})
 	}
 
-	return {boardArray, changeMark, updateBoardArray, checkBoard, addClickBoard};
+	function enableBoardClicks(){
+		tdList = document.querySelectorAll('td');
+		tdList.forEach((td) => {
+			td.style="pointer-events:auto;";
+		})
+	}
+
+	return {newBoard, boardArray, changeMark, updateBoardArray, checkBoard, updateBoard, enableBoardClicks};
 })();
 
 
-
-const gameModule = (function() {
-	let round = 0;
-	let isGameOver = false;
-
-	function addClickPlay(){
-		let playBtn = document.querySelector('#play-btn');
-		playBtn.addEventListener('click', (event)=>{
-			event.preventDefault();
-			let p1NameElement = document.querySelector('#playerX');
-			let p2NameElement = document.querySelector('#playerO')
-			let p1Name = p1NameElement.value;
-			let p2Name = p2NameElement.value;
-
-			p1NameElement.parentNode.removeChild(p1NameElement);
-			p2NameElement.parentNode.removeChild(p2NameElement);
-
-			if(!p1Name){
-				p1Name = 'Player 1';
-			}
-			if(!p2Name){
-				p2Name = 'Player 2';
-			}
-			playerX = playerFactory('X', p1Name);
-			playerO = playerFactory('O', p2Name);
-
-			document.querySelector('#pX-name').innerHTML = p1Name;
-			document.querySelector('#pO-name').innerHTML = p2Name;
-			playBtn.style.display='none';
-			gameModule.renderBoard();
-		})
-	}
+const displayModule = (function() {
+	let displayContainer = document.querySelector('#display-container');
 
 	function renderBoard(){
 		let boardTable= document.querySelector("#board-table");
@@ -151,8 +115,93 @@ const gameModule = (function() {
 			}
 		}
 
-		boardModule.addClickBoard(round);		
+		boardModule.updateBoard(gameLogic.getRound());		
 	}
+
+	function sayWin(player) {
+
+		displayContainer.innerHTML = player.getName()+" won! Good job!";
+		displayContainer.innerHTML+= '<br><button id="new-game-btn"><i class="fa fa-refresh" aria-hidden="true"></i></button>';
+		displayContainer.innerHTML += '<br><button id="play-again-btn">Next Round</button>';
+		gameLogic.playAgain();
+		gameLogic.newGame();
+	}
+
+	function sayTie(){
+		displayContainer.innerHTML = "It's a tie...";
+		displayContainer.innerHTML+= '<br><button id="new-game-btn"><i class="fa fa-refresh" aria-hidden="true"></i></button>';
+		displayContainer.innerHTML += '<button id="play-again-btn">Next Round</button>';
+		gameLogic.playAgain();
+		gameLogic.newGame();
+	}
+
+	function showNames(){
+		let playForm = document.querySelector('#play-form');
+		let p1NameElement = document.querySelector('#playerX');
+		let p2NameElement = document.querySelector('#playerO');
+		let p1Name = p1NameElement.value;
+		let p2Name = p2NameElement.value;
+
+		clearDisplayContainer();
+
+		if(!p1Name){
+			p1Name = 'Player 1';
+		}
+		if(!p2Name){
+			p2Name = 'Player 2';
+		}
+
+		document.querySelector('#pX-name').innerHTML = p1Name;
+		document.querySelector('#pO-name').innerHTML = p2Name;
+	}
+
+	function clearDisplayContainer(){
+		displayContainer.innerHTML="";
+	}
+
+
+	return {renderBoard, sayWin, sayTie, showNames, clearDisplayContainer};
+})();
+
+
+const gameLogic = (function() {
+	let round = 0;
+	let isGameOver = false;
+
+	function newGame(){
+		let newGameBtn = document.querySelector('#new-game-btn');
+		newGameBtn.addEventListener('click', () => {
+			location.reload();
+		})
+	}
+
+	function playAgain() {
+		let playAgainBtn = document.querySelector('#play-again-btn');
+		playAgainBtn.addEventListener('click', () => {
+			boardModule.newBoard();
+			boardModule.enableBoardClicks();
+			displayModule.clearDisplayContainer();
+			setRound(0);
+			setIsGameOver(false);
+		})
+	}
+
+	function play(){
+		let playBtn = document.querySelector('#play-btn');
+
+		playBtn.addEventListener('click', (event)=>{
+			event.preventDefault();
+			displayModule.showNames();
+
+			let p1 = document.querySelector('#pX-name').innerHTML;
+			let p2 = document.querySelector('#pO-name').innerHTML;
+
+			makePlayers(p1, p2);
+			playBtn.style.display='none';
+			displayModule.renderBoard();
+		})
+	}
+
 
 	function setIsGameOver(bool) {
 		isGameOver = bool;
@@ -174,33 +223,70 @@ const gameModule = (function() {
 		return round;
 	}
 
-	function checkGameOver() {
+	function checkRoundOver() {
 		if(round >= 5) {
 			if(boardModule.checkBoard() == 'X') {
 				setIsGameOver(true);
-				return 'X';
+				endRound('X');
 			}
 			else if(boardModule.checkBoard() == 'O') {
 				setIsGameOver(true);
-				return 'O';
+				endRound('O');
 			}
-			else if(round ==9){
-				return 'tie';
+			else if(round == 9){
+				setIsGameOver(true);
+				endRound('tie');
 			}
-			else{
-				return;
-			}
+			
+
 		}
 	}
+
+	function endRound(winner){
+		let tdList = document.querySelectorAll('td');
+
+		if(winner == 'X'){
+			playerX.updateWins();
+			displayModule.sayWin(playerX);
+			document.querySelector('#pX-score').innerHTML = playerX.getWins();
+
+			tdList.forEach((td) => {
+				td.style="pointer-events:none;";
+			})
+		}
+		else if(winner == 'O'){
+			playerO.updateWins();
+			displayModule.sayWin(playerO);
+			document.querySelector('#pO-score').innerHTML = playerO.getWins();
+			tdList.forEach((td) => {
+				td.style="pointer-events:none;";
+			})
+		}
+
+
+		else if(winner == 'tie'){
+			displayModule.sayTie();
+			tdList.forEach((td) => {
+				td.style="pointer-events:none;";
+			})
+		}
+		
+	}
+
+	function makePlayers(p1Name, p2Name){
+		playerX = playerFactory('X', p1Name);
+		playerO = playerFactory('O', p2Name);
+	}
 	
-	return {addClickPlay, getIsGameOver, getRound, updateRound, renderBoard, checkGameOver,};
+	return {playAgain, play, getIsGameOver, getRound, updateRound, endRound, checkRoundOver, makePlayers, newGame};
 })();
 
 
 
-const playerFactory = (mark, name) => {
-	let displayContainer = document.querySelector('#display-container');
+const playerFactory = (mark, n) => {
 	let wins = 0;
+	let name = n;
+
 
 	function getWins() {
 		return wins;
@@ -214,20 +300,24 @@ const playerFactory = (mark, name) => {
 		wins = num;
 	}
 
-	function sayWin() {
-		displayContainer.innerHTML = name+" won! Good job!";
-		displayContainer.innerHTML += '<br><button id="play-again-btn">Play Again</button>';
+	function getName(){
+		return name;
 	}
 
-	function sayTie(){
-		displayContainer.innerHTML = "It's a tie...";
-		displayContainer.innerHTML = '<button>Play Again</button>';
+	function setName(newName) {
+		name = newName;
 	}
 
-	return {mark, name, getWins, updateWins, setWins, sayWin, sayTie};
+
+	function resetPlayer() {
+		setWins(0);
+		setName("");
+	}
+
+	return {getWins, updateWins, setWins, getName, setName, resetPlayer};
 }
 
-gameModule.addClickPlay();
+gameLogic.play();
 
 
 
