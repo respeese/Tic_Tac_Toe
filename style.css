@@ -1,55 +1,131 @@
+
+html {
+	background-color: #a6ffc5;
+}
+
 h1 {
 	text-align: center;
-    margin-top: 40px;
-    margin-bottom: 50px;
+    margin-top: 30px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 2.3em;
+    text-shadow: 3px 3px #1f1f1f63;
+}
+
+
+#board-container{
+	margin-top:20px;
 }
 
 #board-table {
-	width: 600px;
-	height: 600px;
+	width: 402px;
 	border-collapse: collapse;
 	margin-left:auto; 
 	margin-right:auto;
+	border: 2px solid black;
+
 }
+
 td {
 	border: 1px solid black;
 	text-align: center;
 	font-size: 2.7em;
-	width: 200px;
-	height: 200px;
+	height: 134px;
+	width: 134px;
+}
+
+td:hover{
+	background-color: #c2b3ff;
+}
+
+#display-container {
+	height: 90px;
+	text-align: center;
+	font-size: 1.2em;
+	color: #775ce4;
+	font-family: 'Courier Prime', monospace;
+}
+
+#playerO{
+	margin: 10px 30px;
+	padding: 5px;
+	height: 20px;
+	border: 1px solid black;
+	font-family: 'Courier Prime', monospace;
+
+}
+
+#playerX{
+	margin: 10px 30px;
+	padding: 5px;
+	height: 20px;
+	border: 1px solid black;
+	font-family: 'Courier Prime', monospace;
+}
+
+#new-game-btn{
+	margin-top: 10px;
+	font-size: 20px;
+	border: none;
+	background-color: #a6ffc5;
+}
+
+#new-game-btn:hover{
+	color:white;
 }
 
 
-#display-container {
-	height: 75px;
-	text-align: center;
-	margin-bottom: 70px;
-	font-size: 2em;
-	color: #1437ed;
+#play-form{
+	height: 70px;
+
+}
+
+#play-btn {
+	margin-top: 10px;
+	border: 1px solid black;
+	padding: 5px 14px;
+	font-family: 'Courier Prime', monospace;
+
+}
+
+#play-btn:hover{
+	color:white;
+	background-color: #c2b3ff;
 }
 
 #play-again-btn {   
 	border: 1px solid black;
-	width: 10%;
+    width: 80px;
 	height: 31px;
 	padding: 4px;
-	margin: 40px 45%;
+	margin-top: 10px;
+	font-family: 'Courier Prime', monospace;
+
+	font-weight: bold;
+}
+
+#play-again-btn:hover{
+	color:white;
+	background-color: #c2b3ff;
 }
 
 #player-grid-container{
 	text-align: center;
+	font-family: 'Courier Prime', monospace;
 }
 
 #player-table {
+	margin-top: 20px;
 	display:inline-grid;
-	grid-template-columns: 300px 300px;
+    grid-template-columns: 201px 201px;
 	grid-template-rows: 40px 40px;
-	margin-top: 40px;
+	border: 1px solid black;
 }
-
 .grid-item {
 	border: 1px solid rgba(0, 0, 0, 0.8);
-	padding: 20px;
-	/*font-size: 30px;*/
-	text-align: center;
+	padding: 8px;
+	
+}
+
+.highlighted{
+	background-color: #c2b3ff;
 }

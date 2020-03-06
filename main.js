@@ -79,7 +79,9 @@ const boardModule = (function() {
 		let tdList = document.querySelectorAll('td');
 		tdList.forEach((td) => {
 			td.addEventListener('click', (event) => {
+				displayModule.highlightNames(gameLogic.getRound());
 				gameLogic.updateRound();
+
 
 				if(td.innerHTML === '') {
 					td.innerHTML = boardModule.changeMark(gameLogic.getRound());
@@ -130,7 +132,7 @@ const displayModule = (function() {
 	function sayTie(){
 		displayContainer.innerHTML = "It's a tie...";
 		displayContainer.innerHTML+= '<br><button id="new-game-btn"><i class="fa fa-refresh" aria-hidden="true"></i></button>';
-		displayContainer.innerHTML += '<button id="play-again-btn">Next Round</button>';
+		displayContainer.innerHTML += '<br><button id="play-again-btn">Next Round</button>';
 		gameLogic.playAgain();
 		gameLogic.newGame();
 	}
@@ -155,12 +157,26 @@ const displayModule = (function() {
 		document.querySelector('#pO-name').innerHTML = p2Name;
 	}
 
+	function highlightNames(round){
+		let pXName = document.querySelector('#pX-name');
+		let pOName = document.querySelector('#pO-name');
+
+		if(round % 2== 0){
+			pOName.classList.add('highlighted');
+			pXName.classList.remove('highlighted');
+		}
+		else{
+			pXName.classList.add('highlighted');
+			pOName.classList.remove('highlighted');
+		}
+	}
+
 	function clearDisplayContainer(){
 		displayContainer.innerHTML="";
 	}
 
 
-	return {renderBoard, sayWin, sayTie, showNames, clearDisplayContainer};
+	return {renderBoard, sayWin, sayTie, showNames, highlightNames, clearDisplayContainer};
 })();
 
 
@@ -183,6 +199,12 @@ const gameLogic = (function() {
 			displayModule.clearDisplayContainer();
 			setRound(0);
 			setIsGameOver(false);
+
+			let p1Name = document.querySelector('#pX-name');
+			let p2Name = document.querySelector('#pO-name');
+
+			p1Name.classList.add('highlighted');
+			p2Name.classList.remove('highlighted');
 		})
 	}
 
@@ -192,10 +214,13 @@ const gameLogic = (function() {
 		playBtn.addEventListener('click', (event)=>{
 			event.preventDefault();
 			displayModule.showNames();
+			
 
 			let p1 = document.querySelector('#pX-name').innerHTML;
+			let p1Name = document.querySelector('#pX-name');
 			let p2 = document.querySelector('#pO-name').innerHTML;
 
+			p1Name.classList.add('highlighted');
 			makePlayers(p1, p2);
 			playBtn.style.display='none';
 			displayModule.renderBoard();
@@ -318,6 +343,7 @@ const playerFactory = (mark, n) => {
 }
 
 gameLogic.play();
+
 
 
 
