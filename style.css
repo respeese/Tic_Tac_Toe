@@ -92,7 +92,7 @@ td:hover{
 	background-color: #c2b3ff;
 }
 
-#play-again-btn {   
+#new-round-btn {   
 	border: 1px solid black;
     width: 80px;
 	height: 31px;
@@ -103,7 +103,7 @@ td:hover{
 	font-weight: bold;
 }
 
-#play-again-btn:hover{
+#new-round-btn:hover{
 	color:white;
 	background-color: #c2b3ff;
 }

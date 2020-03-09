@@ -79,12 +79,12 @@ const boardModule = (function() {
 		let tdList = document.querySelectorAll('td');
 		tdList.forEach((td) => {
 			td.addEventListener('click', (event) => {
-				displayModule.highlightNames(gameLogic.getRound());
+				displayModule.highlightNames(gameLogic.round);
 				gameLogic.updateRound();
 
 
 				if(td.innerHTML === '') {
-					td.innerHTML = boardModule.changeMark(gameLogic.getRound());
+					td.innerHTML = boardModule.changeMark(gameLogic.round);
 					boardModule.updateBoardArray();
 					td.style = "pointer-events:none;";
 				}
@@ -117,23 +117,23 @@ const displayModule = (function() {
 			}
 		}
 
-		boardModule.updateBoard(gameLogic.getRound());		
+		boardModule.updateBoard(gameLogic.round);		
 	}
 
 	function sayWin(player) {
 
-		displayContainer.innerHTML = player.getName()+" won! Good job!";
+		displayContainer.innerHTML = player.name+" won! Good job!";
 		displayContainer.innerHTML+= '<br><button id="new-game-btn"><i class="fa fa-refresh" aria-hidden="true"></i></button>';
-		displayContainer.innerHTML += '<br><button id="play-again-btn">Next Round</button>';
-		gameLogic.playAgain();
+		displayContainer.innerHTML += '<br><button id="new-round-btn">Next Round</button>';
+		gameLogic.newRound();
 		gameLogic.newGame();
 	}
 
 	function sayTie(){
 		displayContainer.innerHTML = "It's a tie...";
 		displayContainer.innerHTML+= '<br><button id="new-game-btn"><i class="fa fa-refresh" aria-hidden="true"></i></button>';
-		displayContainer.innerHTML += '<br><button id="play-again-btn">Next Round</button>';
-		gameLogic.playAgain();
+		displayContainer.innerHTML += '<br><button id="new-round-btn">Next Round</button>';
+		gameLogic.newRound();
 		gameLogic.newGame();
 	}
 
@@ -182,7 +182,6 @@ const displayModule = (function() {
 
 const gameLogic = (function() {
 	let round = 0;
-	let isGameOver = false;
 
 	function newGame(){
 		let newGameBtn = document.querySelector('#new-game-btn');
@@ -191,14 +190,13 @@ const gameLogic = (function() {
 		})
 	}
 
-	function playAgain() {
-		let playAgainBtn = document.querySelector('#play-again-btn');
-		playAgainBtn.addEventListener('click', () => {
+	function newRound() {
+		let newRoundBtn = document.querySelector('#new-round-btn');
+		newRoundBtn.addEventListener('click', () => {
 			boardModule.newBoard();
 			boardModule.enableBoardClicks();
 			displayModule.clearDisplayContainer();
-			setRound(0);
-			setIsGameOver(false);
+			gameLogic.round = 0;;
 
 			let p1Name = document.querySelector('#pX-name');
 			let p2Name = document.querySelector('#pO-name');
@@ -227,39 +225,19 @@ const gameLogic = (function() {
 		})
 	}
 
-
-	function setIsGameOver(bool) {
-		isGameOver = bool;
-	}
-
-	function getIsGameOver() {
-		return isGameOver;
-	}
-
 	function updateRound() {
-		round += 1;
-	}
-
-	function setRound(val) {
-		round = val;
-	}
-
-	function getRound() {
-		return round;
+		this.round += 1;
 	}
 
 	function checkRoundOver() {
-		if(round >= 5) {
+		if(this.round >= 5) {
 			if(boardModule.checkBoard() == 'X') {
-				setIsGameOver(true);
 				endRound('X');
 			}
 			else if(boardModule.checkBoard() == 'O') {
-				setIsGameOver(true);
 				endRound('O');
 			}
-			else if(round == 9){
-				setIsGameOver(true);
+			else if(this.round == 9){
 				endRound('tie');
 			}
 			
@@ -273,7 +251,7 @@ const gameLogic = (function() {
 		if(winner == 'X'){
 			playerX.updateWins();
 			displayModule.sayWin(playerX);
-			document.querySelector('#pX-score').innerHTML = playerX.getWins();
+			document.querySelector('#pX-score').innerHTML = playerX.wins;
 
 			tdList.forEach((td) => {
 				td.style="pointer-events:none;";
@@ -282,7 +260,7 @@ const gameLogic = (function() {
 		else if(winner == 'O'){
 			playerO.updateWins();
 			displayModule.sayWin(playerO);
-			document.querySelector('#pO-score').innerHTML = playerO.getWins();
+			document.querySelector('#pO-score').innerHTML = playerO.wins;
 			tdList.forEach((td) => {
 				td.style="pointer-events:none;";
 			})
@@ -303,7 +281,7 @@ const gameLogic = (function() {
 		playerO = playerFactory('O', p2Name);
 	}
 	
-	return {playAgain, play, getIsGameOver, getRound, updateRound, endRound, checkRoundOver, makePlayers, newGame};
+	return {newRound, play, updateRound, endRound, checkRoundOver, makePlayers, newGame, round};
 })();
 
 
@@ -312,34 +290,11 @@ const playerFactory = (mark, n) => {
 	let wins = 0;
 	let name = n;
 
-
-	function getWins() {
-		return wins;
-	}
-
 	function updateWins(){
-		wins += 1;
+		this.wins += 1;
 	}
 
-	function setWins(num){
-		wins = num;
-	}
-
-	function getName(){
-		return name;
-	}
-
-	function setName(newName) {
-		name = newName;
-	}
-
-
-	function resetPlayer() {
-		setWins(0);
-		setName("");
-	}
-
-	return {getWins, updateWins, setWins, getName, setName, resetPlayer};
+	return {wins, name, updateWins};
 }
 
 gameLogic.play();
